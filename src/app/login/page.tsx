@@ -69,8 +69,8 @@ export default async function LoginPage({ searchParams }: PageProps) {
         </Link>
       </p>
       <p className="mt-4 rounded-lg bg-[#eef1f6] p-3 text-xs text-slate-600">
-        Demo seed: <strong>alumno@viktorclases.com</strong> o{" "}
-        <strong>viktor@viktorclases.com</strong> · pass <strong>viktor123</strong>
+        Demo (sin planilla): <strong>alumno@viktorclases.com</strong> o{" "}
+        <strong>viktor@viktorclases.com</strong> · <strong>viktor123</strong>
       </p>
     </div>
   );

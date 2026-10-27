@@ -24,6 +24,12 @@ export default async function RegistroPage({ searchParams }: PageProps) {
           Revisá los datos (contraseña mínimo 6 caracteres).
         </p>
       )}
+      {params.error === "sheet" && (
+        <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">
+          Falta configurar escritura en Google Sheets (cuenta de servicio). Podés
+          dar de alta usuarios en la pestaña Usuarios o contactarnos por WhatsApp.
+        </p>
+      )}
       <form action={registerAction} className="mt-8 space-y-4">
         <div>
           <label htmlFor="name" className="text-sm font-medium text-slate-700">

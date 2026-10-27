@@ -1,8 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { findUserByEmail } from "@/lib/sheets/repository";
 
 const credentialsSchema = z.object({
   email: z.string().email(),
@@ -25,24 +24,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const parsed = credentialsSchema.safeParse(credentials);
         if (!parsed.success) return null;
 
-        const user = await prisma.user.findUnique({
-          where: { email: parsed.data.email.toLowerCase() },
-          include: { teacherProfile: true },
-        });
-        if (!user) return null;
-
-        const valid = await bcrypt.compare(
-          parsed.data.password,
-          user.passwordHash,
-        );
-        if (!valid) return null;
+        const user = await findUserByEmail(parsed.data.email);
+        if (!user || user.password !== parsed.data.password) return null;
 
         return {
-          id: user.id,
+          id: user.email,
           email: user.email,
           name: user.name,
           role: user.role,
-          teacherSlug: user.teacherProfile?.slug ?? null,
+          teacherSlug: user.teacherSlug || null,
         };
       },
     }),

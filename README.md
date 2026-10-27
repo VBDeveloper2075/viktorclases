@@ -1,58 +1,57 @@
 # viktorclases
 
-Plataforma Jamstack (Next.js) para clases de apoyo a ingreso universitario: landing pública, catálogo de cursos, grilla de horarios, apuntes/videos y paneles para alumnos y docentes.
+Plataforma Jamstack (Next.js) para clases de apoyo a ingreso universitario. Los datos viven en **Google Sheets** (sin base de datos).
 
 ## Stack
 
-- **Next.js 16** (App Router) + **Tailwind CSS**
-- **Prisma** + **SQLite** (desarrollo; migrar a PostgreSQL en producción)
-- **Auth.js (NextAuth v5)** con roles `STUDENT` y `TEACHER`
+- Next.js 16 + Tailwind CSS
+- Auth.js (usuarios leídos de la pestaña **Usuarios**)
+- Google Sheets API (lectura con API key; escritura opcional con cuenta de servicio)
 
 ## Inicio rápido
 
 ```bash
 npm install
-cp .env.example .env   # en Windows: copy .env.example .env
-npm run db:setup       # crea DB y datos demo
+cp .env.example .env
 npm run dev
 ```
 
-Abrí [http://localhost:3000](http://localhost:3000).
+Sin `GOOGLE_SHEETS_ID` la app usa **datos demo** embebidos (misma grilla y cursos de ejemplo).
 
-### Usuarios demo (contraseña `viktor123`)
+### Login demo (sin planilla)
 
-| Rol    | Email                    |
-|--------|--------------------------|
-| Alumno | alumno@viktorclases.com  |
-| Profe  | viktor@viktorclases.com  |
+| Rol    | Email                    | Contraseña  |
+|--------|--------------------------|-------------|
+| Alumno | alumno@viktorclases.com  | viktor123   |
+| Profe  | viktor@viktorclases.com  | viktor123   |
 
-## Configuración
+## Estructura de la planilla
 
-En `.env`:
+Cada pestaña con **fila 1 = encabezados** (minúsculas o aliases en español):
 
-- `WHATSAPP_NUMBER` / `NEXT_PUBLIC_WHATSAPP_NUMBER` — número con código país (sin +)
-- `NEXT_PUBLIC_YOUTUBE_CHANNEL` — URL del canal
-- `AUTH_SECRET` — secreto para sesiones (generar uno nuevo en producción)
+| Pestaña        | Columnas principales |
+|----------------|----------------------|
+| **Profes**     | slug, name, color, photoUrl, bio |
+| **Cursos**     | slug, title, subtitle, description, modality, priceLabel, icon, teacherSlug, featured |
+| **Horarios**   | courseSlug, date (YYYY-MM-DD), topic, timeSlot, teacherSlug, isHoliday |
+| **Materiales** | courseSlug, topic, title, type (APUNTE/VIDEO), url, published, teacherSlug |
+| **Testimonios**| name, course, text, rating, visible |
+| **Usuarios**   | email, password, name, role (STUDENT/TEACHER), teacherSlug |
+| **Inscripciones** | email, courseSlug |
 
-## Funcionalidades
+Compartí la planilla como **lectura pública** o restringida según prefieras; la API key solo necesita permiso de lectura.
 
-- Landing con identidad navy/amarillo, CTA y grid de cursos (captura mockup)
-- WhatsApp con mensaje prellenado por curso
-- Grilla de horarios con colores por docente (planilla actual)
-- Foto/perfil del profe en cada curso
-- Login y registro (alumno / profe)
-- Panel alumno: materiales del curso inscripto
-- Panel profe: publicar apuntes y videos (URL)
+## Escritura desde la web
 
-## Escalado futuro
+Para que registro y panel profe agreguen filas automáticamente:
 
-- Pagos / packs on-demand (clases grabadas)
-- Subida de archivos a S3 o Vercel Blob
-- PostgreSQL + despliegue en Vercel
-- Inscripciones automáticas y admin
+1. Cuenta de servicio en Google Cloud con Sheets API
+2. Compartir la planilla con el email de la cuenta (Editor)
+3. Variables `GOOGLE_SERVICE_ACCOUNT_EMAIL` y `GOOGLE_PRIVATE_KEY` en `.env`
+
+Si no están configuradas, podés editar la planilla a mano y la web se actualiza al refrescar (cache ~60 s).
 
 ## Scripts
 
-- `npm run db:push` — sincronizar schema
-- `npm run db:seed` — recargar datos demo
-- `npm run build` — build de producción
+- `npm run dev` — desarrollo
+- `npm run build` — producción

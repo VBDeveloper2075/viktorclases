@@ -1,6 +1,10 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { prisma } from "@/lib/prisma";
+import {
+  getCourseBySlug,
+  getMaterials,
+  getScheduleEntries,
+} from "@/lib/sheets/repository";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { courseInquiryMessage } from "@/lib/whatsapp";
 import Link from "next/link";
@@ -9,22 +13,19 @@ type PageProps = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  const course = await prisma.course.findUnique({ where: { slug } });
+  const course = await getCourseBySlug(slug);
   return { title: course?.title ?? "Curso" };
 }
 
 export default async function CursoDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const course = await prisma.course.findUnique({
-    where: { slug },
-    include: {
-      teacher: { include: { user: true } },
-      materials: { where: { published: true }, orderBy: { topic: "asc" } },
-      schedules: { orderBy: { date: "asc" }, take: 8 },
-    },
-  });
-
+  const course = await getCourseBySlug(slug);
   if (!course) notFound();
+
+  const [materials, schedules] = await Promise.all([
+    getMaterials({ courseSlug: slug }),
+    getScheduleEntries(slug),
+  ]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
@@ -44,14 +45,14 @@ export default async function CursoDetailPage({ params }: PageProps) {
             <WhatsAppButton message={courseInquiryMessage(course.title)} />
           </div>
 
-          <h2 className="mt-10 text-xl font-bold text-[#1a3568]">Materiales publicados</h2>
-          {course.materials.length === 0 ? (
+          <h2 className="mt-10 text-xl font-bold text-[#1a3568]">Materiales</h2>
+          {materials.length === 0 ? (
             <p className="mt-2 text-sm text-slate-500">Próximamente apuntes y videos.</p>
           ) : (
             <ul className="mt-4 space-y-2">
-              {course.materials.map((m) => (
+              {materials.map((m, i) => (
                 <li
-                  key={m.id}
+                  key={`${m.title}-${i}`}
                   className="flex items-center justify-between rounded-lg border border-slate-200 px-4 py-3 text-sm"
                 >
                   <span>
@@ -73,13 +74,13 @@ export default async function CursoDetailPage({ params }: PageProps) {
               <div className="relative mx-auto h-32 w-32 overflow-hidden rounded-full ring-4 ring-white">
                 <Image
                   src={course.teacher.photoUrl ?? "/teachers/default.svg"}
-                  alt={course.teacher.user.name}
+                  alt={course.teacher.name}
                   fill
                   className="object-cover"
                 />
               </div>
               <h3 className="mt-4 text-center text-xl font-bold text-[#1a3568]">
-                {course.teacher.user.name}
+                {course.teacher.name}
               </h3>
               <p className="mt-2 text-center text-sm text-slate-600">
                 {course.teacher.bio}
@@ -88,8 +89,8 @@ export default async function CursoDetailPage({ params }: PageProps) {
           )}
           <h4 className="mt-8 font-semibold text-[#1a3568]">Próximas clases</h4>
           <ul className="mt-3 space-y-2 text-sm">
-            {course.schedules.map((s) => (
-              <li key={s.id} className="rounded-lg bg-white px-3 py-2">
+            {schedules.slice(0, 8).map((s, i) => (
+              <li key={`${s.date.toISOString()}-${i}`} className="rounded-lg bg-white px-3 py-2">
                 {s.isHoliday ? (
                   <span className="font-medium text-slate-500">{s.topic}</span>
                 ) : (

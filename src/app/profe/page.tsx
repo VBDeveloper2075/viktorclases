@@ -1,5 +1,10 @@
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import {
+  getCourses,
+  getMaterials,
+  getScheduleEntries,
+  getTeachers,
+} from "@/lib/sheets/repository";
 import { MaterialUploadForm } from "@/components/MaterialUploadForm";
 import Image from "next/image";
 
@@ -9,20 +14,18 @@ export default async function ProfePage() {
   const session = await auth();
   if (!session?.user) return null;
 
-  const teacher = await prisma.teacherProfile.findUnique({
-    where: { userId: session.user.id },
-    include: {
-      user: true,
-      materials: { orderBy: { createdAt: "desc" }, take: 10, include: { course: true } },
-      schedules: {
-        orderBy: { date: "asc" },
-        take: 10,
-        include: { course: true },
-      },
-    },
-  });
+  const teacherSlug = session.user.teacherSlug ?? "";
+  const [courses, teachers, materials, schedules] = await Promise.all([
+    getCourses(),
+    getTeachers(),
+    getMaterials({ teacherSlug, publishedOnly: false }),
+    getScheduleEntries(),
+  ]);
 
-  const courses = await prisma.course.findMany({ orderBy: { title: "asc" } });
+  const teacher = teachers.find((t) => t.slug === teacherSlug);
+  const mySchedules = schedules
+    .filter((s) => s.teacherSlug === teacherSlug)
+    .slice(0, 10);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
@@ -34,36 +37,39 @@ export default async function ProfePage() {
           <div className="relative h-16 w-16 overflow-hidden rounded-full">
             <Image
               src={teacher.photoUrl ?? "/teachers/default.svg"}
-              alt={teacher.user.name}
+              alt={teacher.name}
               fill
               className="object-cover"
             />
           </div>
           <div>
-            <p className="text-sm text-slate-500">Tu perfil en el curso</p>
+            <p className="text-sm text-slate-500">Perfil en la pestaña Profes</p>
             <p className="font-semibold text-[#1a3568]">{teacher.bio}</p>
           </div>
         </div>
       )}
 
       <div className="mt-10 grid gap-8 lg:grid-cols-2">
-        <MaterialUploadForm courses={courses.map((c) => ({ id: c.id, title: c.title }))} />
+        <MaterialUploadForm
+          courses={courses.map((c) => ({ slug: c.slug, title: c.title }))}
+          teacherSlug={teacherSlug}
+        />
 
         <div>
-          <h3 className="font-semibold text-[#1a3568]">Tus publicaciones recientes</h3>
+          <h3 className="font-semibold text-[#1a3568]">Tus materiales (planilla)</h3>
           <ul className="mt-3 space-y-2 text-sm">
-            {(teacher?.materials ?? []).map((m) => (
-              <li key={m.id} className="rounded-lg border border-slate-200 px-3 py-2">
-                {m.title} · {m.course.title}
+            {materials.slice(0, 10).map((m, i) => (
+              <li key={`${m.title}-${i}`} className="rounded-lg border border-slate-200 px-3 py-2">
+                {m.title} · {m.courseSlug}
               </li>
             ))}
           </ul>
 
-          <h3 className="mt-8 font-semibold text-[#1a3568]">Próximas clases asignadas</h3>
+          <h3 className="mt-8 font-semibold text-[#1a3568]">Próximas clases</h3>
           <ul className="mt-3 space-y-2 text-sm text-slate-700">
-            {(teacher?.schedules ?? []).map((s) => (
-              <li key={s.id}>
-                {s.date.toLocaleDateString("es-AR")} — {s.topic} ({s.course.title})
+            {mySchedules.map((s, i) => (
+              <li key={`${s.date.toISOString()}-${i}`}>
+                {s.date.toLocaleDateString("es-AR")} — {s.topic} ({s.courseTitle})
               </li>
             ))}
           </ul>

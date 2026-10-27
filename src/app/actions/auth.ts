@@ -2,19 +2,21 @@
 
 import { signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
-import { prisma } from "@/lib/prisma";
-import bcrypt from "bcryptjs";
-import { Role } from "@prisma/client";
 import { redirect } from "next/navigation";
+import {
+  findUserByEmail,
+  registerUserInSheet,
+} from "@/lib/sheets/repository";
+import type { UserRole } from "@/lib/sheets/types";
 
 export async function loginAction(formData: FormData) {
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
   const callbackUrl = String(formData.get("callbackUrl") ?? "/alumno");
 
-  const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
+  const user = await findUserByEmail(email.toLowerCase());
   const redirectTo =
-    user?.role === Role.TEACHER || user?.role === Role.ADMIN
+    user?.role === "TEACHER" || user?.role === "ADMIN"
       ? callbackUrl.startsWith("/profe")
         ? callbackUrl
         : "/profe"
@@ -44,32 +46,24 @@ export async function registerAction(formData: FormData) {
     redirect("/registro?error=invalid");
   }
 
-  const exists = await prisma.user.findUnique({ where: { email } });
+  const exists = await findUserByEmail(email);
   if (exists) redirect("/registro?error=exists");
 
-  const role = roleRaw === "TEACHER" ? Role.TEACHER : Role.STUDENT;
-  const passwordHash = await bcrypt.hash(password, 10);
+  const role: UserRole = roleRaw === "TEACHER" ? "TEACHER" : "STUDENT";
+  const teacherSlug =
+    role === "TEACHER"
+      ? email.split("@")[0].replace(/[^a-z0-9]/gi, "-").toLowerCase()
+      : "";
 
-  await prisma.user.create({
-    data: {
-      name,
-      email,
-      passwordHash,
-      role,
-      ...(role === Role.TEACHER
-        ? {
-            teacherProfile: {
-              create: {
-                slug: email.split("@")[0].replace(/[^a-z0-9]/gi, "-").toLowerCase(),
-                color: "#2563eb",
-                bio: "Docente de viktorclases",
-                photoUrl: "/teachers/default.svg",
-              },
-            },
-          }
-        : {}),
-    },
+  const ok = await registerUserInSheet({
+    email,
+    password,
+    name,
+    role,
+    teacherSlug,
   });
+
+  if (!ok) redirect("/registro?error=sheet");
 
   redirect("/login?registered=1");
 }

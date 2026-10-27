@@ -1,16 +1,12 @@
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { getFeaturedCourses, getTestimonials } from "@/lib/sheets/repository";
 import { CourseCard } from "@/components/CourseCard";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 export default async function HomePage() {
   const [courses, testimonials] = await Promise.all([
-    prisma.course.findMany({
-      where: { featured: true },
-      include: { teacher: { include: { user: true } } },
-      orderBy: { title: "asc" },
-    }),
-    prisma.testimonial.findMany({ where: { visible: true }, take: 3 }),
+    getFeaturedCourses(),
+    getTestimonials(3),
   ]);
 
   const youtube = process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL ?? "#";
@@ -47,19 +43,18 @@ export default async function HomePage() {
       <section id="cursos" className="mx-auto max-w-6xl px-4 py-14 md:px-6">
         <h2 className="text-2xl font-bold text-[#1a3568]">Elegí tu curso</h2>
         <p className="mt-2 max-w-2xl text-slate-600">
-          Toda la oferta en un solo lugar: horarios, temas, apuntes y contacto
-          directo con el profe.
+          Datos sincronizados desde la planilla de Google Sheets.
         </p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {courses.map((c) => (
             <CourseCard
-              key={c.id}
+              key={c.slug}
               slug={c.slug}
               title={c.title}
               subtitle={c.subtitle}
               icon={c.icon}
               priceLabel={c.priceLabel}
-              teacherName={c.teacher?.user.name}
+              teacherName={c.teacher?.name}
               teacherPhoto={c.teacher?.photoUrl}
               teacherColor={c.teacher?.color}
             />
@@ -70,9 +65,7 @@ export default async function HomePage() {
       <section id="metodologia" className="bg-slate-50 px-4 py-14">
         <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-2 md:px-6">
           <div>
-            <h2 className="text-2xl font-bold text-[#1a3568]">
-              Cómo enseñamos
-            </h2>
+            <h2 className="text-2xl font-bold text-[#1a3568]">Cómo enseñamos</h2>
             <ul className="mt-4 space-y-3 text-slate-700">
               <li>✓ Clases en vivo con pizarra y muchos ejercicios tipo parcial</li>
               <li>✓ Apuntes y videos organizados por tema</li>
@@ -83,14 +76,13 @@ export default async function HomePage() {
               href="/horarios"
               className="mt-6 inline-block font-semibold text-[#1a3568] underline-offset-4 hover:underline"
             >
-              Ver grilla de octubre →
+              Ver grilla de horarios →
             </Link>
           </div>
           <div className="rounded-2xl bg-[#1a3568] p-6 text-white">
             <h3 className="text-lg font-semibold">Canal de YouTube</h3>
             <p className="mt-2 text-sm text-white/80">
-              Mostrá tu estilo de clase antes de inscribirte. Fragmentos y
-              clases de muestra para generar confianza.
+              Fragmentos y clases de muestra para generar confianza.
             </p>
             <a
               href={youtube}
@@ -100,15 +92,6 @@ export default async function HomePage() {
             >
               Ver canal
             </a>
-            <div className="mt-4 aspect-video overflow-hidden rounded-xl bg-black/30">
-              <iframe
-                title="ViktorClases YouTube"
-                className="h-full w-full"
-                src="https://www.youtube.com/embed/videoseries?list=UUplaceholder"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
           </div>
         </div>
       </section>
@@ -116,9 +99,9 @@ export default async function HomePage() {
       <section id="testimonios" className="mx-auto max-w-6xl px-4 py-14 md:px-6">
         <h2 className="text-2xl font-bold text-[#1a3568]">Lo que dicen los alumnos</h2>
         <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {testimonials.map((t) => (
+          {testimonials.map((t, i) => (
             <blockquote
-              key={t.id}
+              key={`${t.name}-${i}`}
               className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
             >
               <p className="text-sm text-slate-700">&ldquo;{t.text}&rdquo;</p>
@@ -128,24 +111,6 @@ export default async function HomePage() {
               </footer>
             </blockquote>
           ))}
-        </div>
-      </section>
-
-      <section className="border-t border-slate-200 bg-[#eef1f6] px-4 py-12">
-        <div className="mx-auto max-w-6xl text-center md:px-6">
-          <h2 className="text-xl font-bold text-[#1a3568]">
-            Próximo paso: clases grabadas y materiales premium
-          </h2>
-          <p className="mx-auto mt-2 max-w-xl text-sm text-slate-600">
-            La plataforma está preparada para sumar venta de packs on-demand y
-            descargables sin depender solo de WhatsApp.
-          </p>
-          <Link
-            href="/registro"
-            className="mt-6 inline-block rounded-xl bg-[#1a3568] px-6 py-3 text-sm font-semibold text-white"
-          >
-            Crear cuenta de alumno
-          </Link>
         </div>
       </section>
     </>

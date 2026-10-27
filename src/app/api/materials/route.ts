@@ -1,15 +1,15 @@
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
-import { MaterialType } from "@prisma/client";
+import { appendMaterialToSheet } from "@/lib/sheets/repository";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
 const createSchema = z.object({
-  courseId: z.string(),
+  courseSlug: z.string(),
   topic: z.string().min(1),
   title: z.string().min(1),
   type: z.enum(["APUNTE", "VIDEO"]),
-  url: z.string().url().or(z.string().startsWith("/")),
+  url: z.string().min(1),
+  teacherSlug: z.string().optional(),
 });
 
 export async function POST(request: Request) {
@@ -24,17 +24,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Datos inválidos" }, { status: 400 });
   }
 
-  const teacher = await prisma.teacherProfile.findFirst({
-    where: { userId: session.user.id },
+  const ok = await appendMaterialToSheet({
+    ...parsed.data,
+    published: true,
+    teacherSlug: parsed.data.teacherSlug ?? session.user.teacherSlug ?? "",
   });
 
-  const material = await prisma.material.create({
-    data: {
-      ...parsed.data,
-      type: parsed.data.type as MaterialType,
-      teacherId: teacher?.id,
-    },
-  });
+  if (!ok) {
+    return NextResponse.json(
+      {
+        error:
+          "No se pudo escribir en Sheets. Configurá la cuenta de servicio o cargá el material en la planilla.",
+      },
+      { status: 503 },
+    );
+  }
 
-  return NextResponse.json(material);
+  return NextResponse.json({ ok: true });
 }
