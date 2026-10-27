@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+enum MaterialType {
+  APUNTE
+  VIDEO
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(STUDENT)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  teacherProfile TeacherProfile?
+  enrollments    Enrollment[]
+}
+
+model TeacherProfile {
+  id        String  @id @default(cuid())
+  userId    String  @unique
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  slug      String  @unique
+  color     String
+  photoUrl  String?
+  bio       String?
+  courses   Course[]
+  schedules ScheduleEntry[]
+  materials Material[]
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  subtitle    String
+  description String
+  modality    String
+  priceLabel  String?
+  icon        String
+  featured    Boolean  @default(true)
+  teacherId   String?
+  teacher     TeacherProfile? @relation(fields: [teacherId], references: [id])
+  schedules   ScheduleEntry[]
+  materials   Material[]
+  enrollments Enrollment[]
+}
+
+model ScheduleEntry {
+  id        String   @id @default(cuid())
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  teacherId String?
+  teacher   TeacherProfile? @relation(fields: [teacherId], references: [id])
+  date      DateTime
+  topic     String
+  timeSlot  String
+  isHoliday Boolean  @default(false)
+  note      String?
+}
+
+model Material {
+  id          String       @id @default(cuid())
+  courseId    String
+  course      Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  teacherId   String?
+  teacher     TeacherProfile? @relation(fields: [teacherId], references: [id])
+  topic       String
+  title       String
+  type        MaterialType
+  url         String
+  published   Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+}
+
+model Enrollment {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, courseId])
+}
+
+model Testimonial {
+  id      String @id @default(cuid())
+  name    String
+  text    String
+  course  String
+  rating  Int    @default(5)
+  visible Boolean @default(true)
+}

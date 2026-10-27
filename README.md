@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# viktorclases
 
-## Getting Started
+Plataforma Jamstack (Next.js) para clases de apoyo a ingreso universitario: landing pública, catálogo de cursos, grilla de horarios, apuntes/videos y paneles para alumnos y docentes.
 
-First, run the development server:
+## Stack
+
+- **Next.js 16** (App Router) + **Tailwind CSS**
+- **Prisma** + **SQLite** (desarrollo; migrar a PostgreSQL en producción)
+- **Auth.js (NextAuth v5)** con roles `STUDENT` y `TEACHER`
+
+## Inicio rápido
 
 ```bash
+npm install
+cp .env.example .env   # en Windows: copy .env.example .env
+npm run db:setup       # crea DB y datos demo
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abrí [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Usuarios demo (contraseña `viktor123`)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Rol    | Email                    |
+|--------|--------------------------|
+| Alumno | alumno@viktorclases.com  |
+| Profe  | viktor@viktorclases.com  |
 
-## Learn More
+## Configuración
 
-To learn more about Next.js, take a look at the following resources:
+En `.env`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `WHATSAPP_NUMBER` / `NEXT_PUBLIC_WHATSAPP_NUMBER` — número con código país (sin +)
+- `NEXT_PUBLIC_YOUTUBE_CHANNEL` — URL del canal
+- `AUTH_SECRET` — secreto para sesiones (generar uno nuevo en producción)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Funcionalidades
 
-## Deploy on Vercel
+- Landing con identidad navy/amarillo, CTA y grid de cursos (captura mockup)
+- WhatsApp con mensaje prellenado por curso
+- Grilla de horarios con colores por docente (planilla actual)
+- Foto/perfil del profe en cada curso
+- Login y registro (alumno / profe)
+- Panel alumno: materiales del curso inscripto
+- Panel profe: publicar apuntes y videos (URL)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Escalado futuro
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Pagos / packs on-demand (clases grabadas)
+- Subida de archivos a S3 o Vercel Blob
+- PostgreSQL + despliegue en Vercel
+- Inscripciones automáticas y admin
+
+## Scripts
+
+- `npm run db:push` — sincronizar schema
+- `npm run db:seed` — recargar datos demo
+- `npm run build` — build de producción
