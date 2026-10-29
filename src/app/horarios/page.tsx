@@ -1,4 +1,4 @@
-import { getScheduleEntries } from "@/lib/sheets/repository";
+import { getScheduleEntries } from "@/lib/data/repository";
 import { TeacherBadge } from "@/components/TeacherBadge";
 import { timeSlots } from "@/lib/brand";
 

@@ -10,8 +10,7 @@ export function SiteFooter() {
         <div>
           <Logo variant="dark" />
           <p className="mt-3 text-sm text-slate-600">
-            Clases de apoyo para ingreso y materias de primer año. UTN · CBC · UBA
-            XXI.
+            Clases de apoyo para ingreso. UTN · CBC · UBA XXI.
           </p>
         </div>
         <div>
@@ -19,25 +18,25 @@ export function SiteFooter() {
           <ul className="mt-3 space-y-2 text-sm text-slate-600">
             <li>
               <Link href="/cursos" className="hover:text-[#1a3568]">
-                Cursos y precios
+                Cursos
               </Link>
             </li>
             <li>
               <Link href="/horarios" className="hover:text-[#1a3568]">
-                Grilla de horarios
+                Horarios
               </Link>
             </li>
             <li>
               <a href={youtube} target="_blank" rel="noreferrer" className="hover:text-[#1a3568]">
-                Canal de YouTube
+                YouTube
               </a>
             </li>
           </ul>
         </div>
         <div>
-          <h3 className="font-semibold text-[#1a3568]">Contacto</h3>
+          <h3 className="font-semibold text-[#1a3568]">Plataforma</h3>
           <p className="mt-3 text-sm text-slate-600">
-            Consultas e inscripciones por WhatsApp desde cada curso.
+            Desplegada en Vercel · catálogo demo estático.
           </p>
         </div>
       </div>

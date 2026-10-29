@@ -4,9 +4,8 @@ import {
   getCourseBySlug,
   getMaterials,
   getScheduleEntries,
-} from "@/lib/sheets/repository";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { courseInquiryMessage } from "@/lib/whatsapp";
+} from "@/lib/data/repository";
+import { EstudiarConButton } from "@/components/EstudiarConButton";
 import Link from "next/link";
 
 type PageProps = { params: Promise<{ slug: string }> };
@@ -21,6 +20,9 @@ export default async function CursoDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const course = await getCourseBySlug(slug);
   if (!course) notFound();
+
+  const teacherSlug = course.teacher?.slug ?? course.teacherSlug;
+  const teacherName = course.teacher?.name;
 
   const [materials, schedules] = await Promise.all([
     getMaterials({ courseSlug: slug }),
@@ -41,18 +43,20 @@ export default async function CursoDetailPage({ params }: PageProps) {
             Modalidad: {course.modality}
             {course.priceLabel ? ` · ${course.priceLabel}` : ""}
           </p>
-          <div className="mt-6">
-            <WhatsAppButton message={courseInquiryMessage(course.title)} />
-          </div>
+          {teacherSlug && teacherName && (
+            <div className="mt-6 max-w-sm">
+              <EstudiarConButton teacherSlug={teacherSlug} teacherName={teacherName} />
+            </div>
+          )}
 
-          <h2 className="mt-10 text-xl font-bold text-[#1a3568]">Materiales</h2>
+          <h2 className="mt-10 text-xl font-bold text-[#1a3568]">Contenido del curso</h2>
           {materials.length === 0 ? (
-            <p className="mt-2 text-sm text-slate-500">Próximamente apuntes y videos.</p>
+            <p className="mt-2 text-sm text-slate-500">Próximamente más materiales.</p>
           ) : (
             <ul className="mt-4 space-y-2">
               {materials.map((m, i) => (
                 <li
-                  key={`${m.title}-${i}`}
+                  key={m.id ?? `${m.title}-${i}`}
                   className="flex items-center justify-between rounded-lg border border-slate-200 px-4 py-3 text-sm"
                 >
                   <span>
@@ -60,7 +64,7 @@ export default async function CursoDetailPage({ params }: PageProps) {
                     <span className="text-slate-500"> · {m.topic}</span>
                   </span>
                   <span className="rounded bg-slate-100 px-2 py-0.5 text-xs uppercase">
-                    {m.type === "VIDEO" ? "Video" : "Apunte"}
+                    {m.kind}
                   </span>
                 </li>
               ))}
@@ -85,6 +89,12 @@ export default async function CursoDetailPage({ params }: PageProps) {
               <p className="mt-2 text-center text-sm text-slate-600">
                 {course.teacher.bio}
               </p>
+              <div className="mt-4">
+                <EstudiarConButton
+                  teacherSlug={course.teacher.slug}
+                  teacherName={course.teacher.name}
+                />
+              </div>
             </>
           )}
           <h4 className="mt-8 font-semibold text-[#1a3568]">Próximas clases</h4>
@@ -109,12 +119,6 @@ export default async function CursoDetailPage({ params }: PageProps) {
               </li>
             ))}
           </ul>
-          <Link
-            href="/horarios"
-            className="mt-4 block text-center text-sm font-semibold text-[#1a3568] hover:underline"
-          >
-            Grilla completa
-          </Link>
         </aside>
       </div>
     </div>

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     template: "%s | viktorclases",
   },
   description:
-    "Clases grupales y virtuales para UTN, CBC y UBA XXI. Apuntes, videos, horarios y contacto directo por WhatsApp.",
+    "Clases grupales y virtuales para UTN, CBC y UBA XXI. Videos, apuntes y ejercitación con cada profe.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { courseInquiryMessage } from "@/lib/whatsapp";
-import { WhatsAppButton } from "./WhatsAppButton";
+import { EstudiarConButton } from "./EstudiarConButton";
 
 const icons: Record<string, string> = {
   calculator: "🧮",
@@ -16,6 +15,7 @@ type CourseCardProps = {
   subtitle: string;
   icon: string;
   priceLabel?: string | null;
+  teacherSlug?: string | null;
   teacherName?: string | null;
   teacherPhoto?: string | null;
   teacherColor?: string | null;
@@ -27,6 +27,7 @@ export function CourseCard({
   subtitle,
   icon,
   priceLabel,
+  teacherSlug,
   teacherName,
   teacherPhoto,
   teacherColor,
@@ -74,11 +75,9 @@ export function CourseCard({
         >
           Ver detalle
         </Link>
-        <WhatsAppButton
-          message={courseInquiryMessage(title)}
-          label="WhatsApp"
-          className="w-full py-2.5 text-xs"
-        />
+        {teacherSlug && teacherName && (
+          <EstudiarConButton teacherSlug={teacherSlug} teacherName={teacherName} />
+        )}
       </div>
     </article>
   );

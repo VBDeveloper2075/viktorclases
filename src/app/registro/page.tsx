@@ -3,93 +3,33 @@ import { registerAction } from "@/app/actions/auth";
 
 export const metadata = { title: "Registro" };
 
-type PageProps = { searchParams: Promise<{ error?: string }> };
-
-export default async function RegistroPage({ searchParams }: PageProps) {
-  const params = await searchParams;
+export default function RegistroPage() {
   return (
     <div className="mx-auto flex max-w-md flex-col px-4 py-16">
       <h1 className="text-2xl font-bold text-[#1a3568]">Crear cuenta</h1>
       <p className="mt-2 text-sm text-slate-600">
-        Alumnos acceden a materiales inscriptos. Docentes pueden publicar apuntes
-        y videos.
+        Registro desactivado; este formulario solo redirige al login en modo demo.
       </p>
-      {params.error === "exists" && (
-        <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">
-          Ya existe una cuenta con ese email.
-        </p>
-      )}
-      {params.error === "invalid" && (
-        <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">
-          Revisá los datos (contraseña mínimo 6 caracteres).
-        </p>
-      )}
-      {params.error === "sheet" && (
-        <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">
-          Falta configurar escritura en Google Sheets (cuenta de servicio). Podés
-          dar de alta usuarios en la pestaña Usuarios o contactarnos por WhatsApp.
-        </p>
-      )}
       <form action={registerAction} className="mt-8 space-y-4">
-        <div>
-          <label htmlFor="name" className="text-sm font-medium text-slate-700">
-            Nombre
-          </label>
-          <input
-            id="name"
-            name="name"
-            required
-            className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2"
-          />
-        </div>
-        <div>
-          <label htmlFor="email" className="text-sm font-medium text-slate-700">
-            Email
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2"
-          />
-        </div>
-        <div>
-          <label htmlFor="password" className="text-sm font-medium text-slate-700">
-            Contraseña
-          </label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            minLength={6}
-            required
-            className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2"
-          />
-        </div>
-        <div>
-          <label htmlFor="role" className="text-sm font-medium text-slate-700">
-            Soy
-          </label>
-          <select
-            id="role"
-            name="role"
-            className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2"
-            defaultValue="STUDENT"
-          >
-            <option value="STUDENT">Alumno/a</option>
-            <option value="TEACHER">Profe / docente</option>
-          </select>
-        </div>
+        <input
+          name="name"
+          placeholder="Nombre"
+          className="w-full rounded-xl border border-slate-300 px-3 py-2"
+        />
+        <input
+          name="email"
+          type="email"
+          placeholder="Email"
+          className="w-full rounded-xl border border-slate-300 px-3 py-2"
+        />
         <button
           type="submit"
           className="w-full rounded-xl bg-[#f5c518] py-3 text-sm font-bold text-[#1a3568]"
         >
-          Registrarme
+          Continuar (demo)
         </button>
       </form>
       <p className="mt-6 text-center text-sm text-slate-600">
-        ¿Ya tenés cuenta?{" "}
         <Link href="/login" className="font-semibold text-[#1a3568] hover:underline">
           Ingresar
         </Link>

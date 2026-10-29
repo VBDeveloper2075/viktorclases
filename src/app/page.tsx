@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { getFeaturedCourses, getTestimonials } from "@/lib/sheets/repository";
+import { getFeaturedCourses, getTestimonials } from "@/lib/data/repository";
 import { CourseCard } from "@/components/CourseCard";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 export default async function HomePage() {
   const [courses, testimonials] = await Promise.all([
@@ -31,11 +30,6 @@ export default async function HomePage() {
             >
               Ver cursos disponibles
             </Link>
-            <WhatsAppButton
-              message="Hola ViktorClases, quiero info sobre los cursos disponibles."
-              label="Escribinos por WhatsApp"
-              className="rounded-xl"
-            />
           </div>
         </div>
       </section>
@@ -43,7 +37,7 @@ export default async function HomePage() {
       <section id="cursos" className="mx-auto max-w-6xl px-4 py-14 md:px-6">
         <h2 className="text-2xl font-bold text-[#1a3568]">Elegí tu curso</h2>
         <p className="mt-2 max-w-2xl text-slate-600">
-          Datos sincronizados desde la planilla de Google Sheets.
+          Entrá a estudiar con el profe de cada materia: videos, apuntes y ejercitación.
         </p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {courses.map((c) => (
@@ -54,6 +48,7 @@ export default async function HomePage() {
               subtitle={c.subtitle}
               icon={c.icon}
               priceLabel={c.priceLabel}
+              teacherSlug={c.teacher?.slug ?? c.teacherSlug}
               teacherName={c.teacher?.name}
               teacherPhoto={c.teacher?.photoUrl}
               teacherColor={c.teacher?.color}
@@ -67,10 +62,9 @@ export default async function HomePage() {
           <div>
             <h2 className="text-2xl font-bold text-[#1a3568]">Cómo enseñamos</h2>
             <ul className="mt-4 space-y-3 text-slate-700">
-              <li>✓ Clases en vivo con pizarra y muchos ejercicios tipo parcial</li>
-              <li>✓ Apuntes y videos organizados por tema</li>
-              <li>✓ Grilla clara con franjas 19:30–21:00 y 21:10–22:40</li>
-              <li>✓ Seguimiento por WhatsApp según el curso que elijas</li>
+              <li>✓ Clases en vivo con pizarra y ejercicios tipo parcial</li>
+              <li>✓ Apuntes, videos y guías en la plataforma</li>
+              <li>✓ Grilla con franjas 19:30–21:00 y 21:10–22:40</li>
             </ul>
             <Link
               href="/horarios"
