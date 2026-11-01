@@ -13,19 +13,22 @@ export default async function HorariosPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
-      <h1 className="text-3xl font-bold text-[#1a3568]">Grilla de horarios</h1>
-      <p className="mt-2 capitalize text-slate-600">
+      <h1 className="heading-display text-3xl text-brand-dark">Grilla de horarios</h1>
+      <p className="mt-2 capitalize text-brand-muted">
         {monthLabel} · {entries[0]?.courseTitle ?? "Análisis 1"}
       </p>
 
-      <div className="mt-6 overflow-x-auto rounded-2xl border border-slate-200 shadow-sm">
+      <div className="mt-6 overflow-x-auto rounded-2xl border border-black/10 shadow-sm">
         <table className="min-w-full text-sm">
           <thead>
-            <tr className="bg-slate-800 text-left text-white">
+            <tr className="bg-brand-dark text-left text-white">
               <th className="px-4 py-3 font-semibold">Fecha</th>
               <th className="px-4 py-3 font-semibold">Tema</th>
               {timeSlots.map((slot) => (
-                <th key={slot} className="bg-[#f5c518] px-4 py-3 font-semibold text-black">
+                <th
+                  key={slot}
+                  className="bg-brand-gradient px-4 py-3 font-bold text-brand-dark"
+                >
                   {slot}
                 </th>
               ))}
@@ -35,13 +38,13 @@ export default async function HorariosPage() {
             {entries.map((row, i) => {
               const isWeekend = [0, 6].includes(row.date.getUTCDay());
               const rowClass = row.isHoliday
-                ? "bg-slate-300 text-slate-600"
+                ? "bg-neutral-300 text-neutral-600"
                 : isWeekend
-                  ? "bg-slate-100 text-slate-400"
+                  ? "bg-brand-surface text-brand-muted"
                   : "bg-white";
 
               return (
-                <tr key={`${row.date.toISOString()}-${i}`} className={`border-t border-slate-100 ${rowClass}`}>
+                <tr key={`${row.date.toISOString()}-${i}`} className={`border-t border-black/5 ${rowClass}`}>
                   <td className="whitespace-nowrap px-4 py-3 font-medium">
                     {row.date.toLocaleDateString("es-AR", {
                       weekday: "short",
@@ -66,7 +69,7 @@ export default async function HorariosPage() {
                           }
                         />
                       ) : (
-                        <span className="text-slate-300">—</span>
+                        <span className="text-neutral-300">—</span>
                       )}
                     </td>
                   ))}

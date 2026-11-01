@@ -31,15 +31,15 @@ export default async function CursoDetailPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
-      <Link href="/cursos" className="text-sm text-[#1a3568] hover:underline">
+      <Link href="/cursos" className="text-sm font-medium text-brand-green hover:underline">
         ← Volver a cursos
       </Link>
       <div className="mt-6 grid gap-10 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <h1 className="text-3xl font-bold text-[#1a3568]">{course.title}</h1>
-          <p className="mt-2 text-lg text-slate-600">{course.subtitle}</p>
-          <p className="mt-4 text-slate-700">{course.description}</p>
-          <p className="mt-2 text-sm font-medium text-slate-600">
+          <h1 className="heading-display text-3xl text-brand-dark">{course.title}</h1>
+          <p className="mt-2 text-lg text-brand-muted">{course.subtitle}</p>
+          <p className="mt-4 text-brand-dark/90">{course.description}</p>
+          <p className="mt-2 text-sm font-medium text-brand-muted">
             Modalidad: {course.modality}
             {course.priceLabel ? ` · ${course.priceLabel}` : ""}
           </p>
@@ -49,21 +49,21 @@ export default async function CursoDetailPage({ params }: PageProps) {
             </div>
           )}
 
-          <h2 className="mt-10 text-xl font-bold text-[#1a3568]">Contenido del curso</h2>
+          <h2 className="mt-10 text-xl font-bold text-brand-dark">Contenido del curso</h2>
           {materials.length === 0 ? (
-            <p className="mt-2 text-sm text-slate-500">Próximamente más materiales.</p>
+            <p className="mt-2 text-sm text-brand-muted">Próximamente más materiales.</p>
           ) : (
             <ul className="mt-4 space-y-2">
               {materials.map((m, i) => (
                 <li
                   key={m.id ?? `${m.title}-${i}`}
-                  className="flex items-center justify-between rounded-lg border border-slate-200 px-4 py-3 text-sm"
+                  className="flex items-center justify-between rounded-lg border border-black/5 bg-brand-surface px-4 py-3 text-sm"
                 >
                   <span>
-                    <span className="font-medium">{m.title}</span>
-                    <span className="text-slate-500"> · {m.topic}</span>
+                    <span className="font-medium text-brand-dark">{m.title}</span>
+                    <span className="text-brand-muted"> · {m.topic}</span>
                   </span>
-                  <span className="rounded bg-slate-100 px-2 py-0.5 text-xs uppercase">
+                  <span className="rounded bg-brand-lime/30 px-2 py-0.5 text-xs font-semibold uppercase text-brand-green">
                     {m.kind}
                   </span>
                 </li>
@@ -72,7 +72,7 @@ export default async function CursoDetailPage({ params }: PageProps) {
           )}
         </div>
 
-        <aside className="rounded-2xl bg-[#eef1f6] p-6">
+        <aside className="rounded-2xl bg-brand-surface p-6 ring-1 ring-black/5">
           {course.teacher && (
             <>
               <div className="relative mx-auto h-32 w-32 overflow-hidden rounded-full ring-4 ring-white">
@@ -83,10 +83,10 @@ export default async function CursoDetailPage({ params }: PageProps) {
                   className="object-cover"
                 />
               </div>
-              <h3 className="mt-4 text-center text-xl font-bold text-[#1a3568]">
+              <h3 className="mt-4 text-center text-xl font-bold text-brand-dark">
                 {course.teacher.name}
               </h3>
-              <p className="mt-2 text-center text-sm text-slate-600">
+              <p className="mt-2 text-center text-sm text-brand-muted">
                 {course.teacher.bio}
               </p>
               <div className="mt-4">
@@ -97,23 +97,23 @@ export default async function CursoDetailPage({ params }: PageProps) {
               </div>
             </>
           )}
-          <h4 className="mt-8 font-semibold text-[#1a3568]">Próximas clases</h4>
+          <h4 className="mt-8 font-semibold text-brand-dark">Próximas clases</h4>
           <ul className="mt-3 space-y-2 text-sm">
             {schedules.slice(0, 8).map((s, i) => (
               <li key={`${s.date.toISOString()}-${i}`} className="rounded-lg bg-white px-3 py-2">
                 {s.isHoliday ? (
-                  <span className="font-medium text-slate-500">{s.topic}</span>
+                  <span className="font-medium text-brand-muted">{s.topic}</span>
                 ) : (
                   <>
-                    <span className="font-medium">
+                    <span className="font-medium text-brand-dark">
                       {s.date.toLocaleDateString("es-AR", {
                         weekday: "short",
                         day: "numeric",
                         month: "short",
                       })}
                     </span>
-                    <span className="text-slate-600"> · {s.topic}</span>
-                    <span className="block text-xs text-slate-500">{s.timeSlot}</span>
+                    <span className="text-brand-muted"> · {s.topic}</span>
+                    <span className="block text-xs text-brand-muted">{s.timeSlot}</span>
                   </>
                 )}
               </li>

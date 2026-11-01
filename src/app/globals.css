@@ -1,20 +1,84 @@
 @import "tailwindcss";
 
 :root {
-  --viktor-navy: #1a3568;
-  --viktor-yellow: #f5c518;
+  --brand-dark: #1a1a1b;
+  --brand-lime: #a2d729;
+  --brand-green: #2e7d32;
+  --brand-surface: #f4f5f2;
   --background: #ffffff;
-  --foreground: #0f172a;
+  --foreground: #1a1a1b;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-poppins);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-lime: var(--brand-lime);
+  --color-brand-green: var(--brand-green);
+  --color-brand-surface: var(--brand-surface);
+  --color-brand-muted: #5c635a;
+  --font-sans: var(--font-montserrat);
+  --font-display: var(--font-montserrat);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-poppins), system-ui, sans-serif;
+  font-family: var(--font-montserrat), system-ui, sans-serif;
+}
+
+/* Gradiente del logo (CLASES + barra) */
+.bg-brand-gradient {
+  background: linear-gradient(180deg, #a2d729 0%, #2e7d32 100%);
+}
+
+.text-brand-gradient {
+  background: linear-gradient(180deg, #a2d729 0%, #2e7d32 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  background: linear-gradient(180deg, #a2d729 0%, #2e7d32 100%);
+  color: #1a1a1b;
+  font-weight: 700;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.btn-brand:hover {
+  filter: brightness(1.05);
+}
+
+.btn-brand-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  border: 2px solid #1a1a1b;
+  color: #1a1a1b;
+  font-weight: 600;
+  background: white;
+  transition: background 0.15s ease;
+}
+
+.btn-brand-outline:hover {
+  background: var(--brand-surface);
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.heading-display {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 }

@@ -33,14 +33,14 @@ export function CourseCard({
   teacherColor,
 }: CourseCardProps) {
   return (
-    <article className="flex flex-col rounded-2xl bg-[#eef1f6] p-5 shadow-sm ring-1 ring-slate-200/60">
+    <article className="flex flex-col rounded-2xl bg-brand-surface p-5 shadow-sm ring-1 ring-black/5">
       <div className="flex items-start gap-3">
         <span className="text-2xl" aria-hidden>
           {icons[icon] ?? "📚"}
         </span>
         <div className="min-w-0 flex-1">
-          <h3 className="text-lg font-bold text-[#1a3568]">{title}</h3>
-          <p className="text-sm text-slate-600">{subtitle}</p>
+          <h3 className="text-lg font-bold text-brand-dark">{title}</h3>
+          <p className="text-sm text-brand-muted">{subtitle}</p>
         </div>
       </div>
 
@@ -48,7 +48,7 @@ export function CourseCard({
         <div className="mt-4 flex items-center gap-3">
           <div
             className="relative h-12 w-12 overflow-hidden rounded-full ring-2 ring-white"
-            style={{ boxShadow: `0 0 0 2px ${teacherColor ?? "#1a3568"}` }}
+            style={{ boxShadow: `0 0 0 2px ${teacherColor ?? "#1A1A1B"}` }}
           >
             <Image
               src={teacherPhoto ?? "/teachers/default.svg"}
@@ -58,20 +58,20 @@ export function CourseCard({
             />
           </div>
           <div>
-            <p className="text-xs uppercase tracking-wide text-slate-500">A cargo</p>
-            <p className="font-semibold text-[#1a3568]">{teacherName}</p>
+            <p className="eyebrow text-[10px] text-brand-muted">A cargo</p>
+            <p className="font-semibold text-brand-dark">{teacherName}</p>
           </div>
         </div>
       )}
 
       {priceLabel && (
-        <p className="mt-3 text-sm font-medium text-slate-700">{priceLabel}</p>
+        <p className="mt-3 text-sm font-medium text-brand-dark/80">{priceLabel}</p>
       )}
 
       <div className="mt-auto flex flex-col gap-2 pt-5">
         <Link
           href={`/cursos/${slug}`}
-          className="rounded-xl border border-[#1a3568]/20 bg-white py-2.5 text-center text-sm font-semibold text-[#1a3568] hover:bg-slate-50"
+          className="btn-brand-outline w-full py-2.5 text-center text-sm"
         >
           Ver detalle
         </Link>

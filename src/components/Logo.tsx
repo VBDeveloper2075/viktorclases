@@ -1,21 +1,22 @@
+import Image from "next/image";
 import Link from "next/link";
 
 type LogoProps = {
-  variant?: "light" | "dark";
+  compact?: boolean;
   className?: string;
 };
 
-export function Logo({ variant = "light", className = "" }: LogoProps) {
-  const textColor = variant === "light" ? "text-white" : "text-[#1a3568]";
-
+export function Logo({ compact = false, className = "" }: LogoProps) {
   return (
-    <Link href="/" className={`flex items-center gap-2.5 ${className}`}>
-      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f5c518] text-xl font-bold text-black shadow-sm">
-        Σ
-      </span>
-      <span className={`text-xl font-semibold tracking-tight lowercase ${textColor}`}>
-        viktorclases
-      </span>
+    <Link href="/" className={`inline-flex shrink-0 items-center ${className}`}>
+      <Image
+        src="/logo-viktorclases.jpg"
+        alt="VIKTORCLASES — Matemática y Física"
+        width={compact ? 140 : 200}
+        height={compact ? 48 : 68}
+        className={`h-auto w-auto ${compact ? "max-h-10" : "max-h-14 md:max-h-16"}`}
+        priority
+      />
     </Link>
   );
 }

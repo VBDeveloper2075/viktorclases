@@ -36,18 +36,18 @@ export default async function EstudiarSectionPage({ params }: PageProps) {
     <div className="mx-auto max-w-3xl px-4 py-12 md:px-6">
       <Link
         href={`/estudiar/${teacherSlug}`}
-        className="text-sm text-[#1a3568] hover:underline"
+        className="text-sm font-medium text-brand-green hover:underline"
       >
         ← Estudiar con {teacher.name}
       </Link>
 
-      <h1 className="mt-4 text-2xl font-bold text-[#1a3568]">
+      <h1 className="heading-display mt-4 text-2xl text-brand-dark">
         {meta.title} · {teacher.name}
       </h1>
-      <p className="mt-1 text-slate-600">{meta.description}</p>
+      <p className="mt-1 text-brand-muted">{meta.description}</p>
 
       {materials.length === 0 ? (
-        <p className="mt-10 rounded-xl bg-[#eef1f6] p-6 text-center text-slate-600">
+        <p className="mt-10 rounded-xl bg-brand-surface p-6 text-center text-brand-muted">
           Todavía no hay {meta.title.toLowerCase()} publicados para este profe.
         </p>
       ) : (
@@ -58,11 +58,11 @@ export default async function EstudiarSectionPage({ params }: PageProps) {
                 href={m.url}
                 target="_blank"
                 rel="noreferrer"
-                className="block rounded-xl border border-slate-200 bg-white px-5 py-4 shadow-sm hover:border-[#1a3568]/30"
+                className="block rounded-xl border border-black/5 bg-white px-5 py-4 shadow-sm transition hover:border-brand-green/40"
               >
-                <span className="font-semibold text-[#1a3568]">{m.title}</span>
+                <span className="font-semibold text-brand-dark">{m.title}</span>
                 {m.topic && (
-                  <span className="mt-1 block text-sm text-slate-500">{m.topic}</span>
+                  <span className="mt-1 block text-sm text-brand-muted">{m.topic}</span>
                 )}
               </a>
             </li>

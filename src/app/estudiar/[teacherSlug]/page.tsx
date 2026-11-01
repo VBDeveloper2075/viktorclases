@@ -19,13 +19,13 @@ export default async function EstudiarHubPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 md:px-6">
-      <Link href="/cursos" className="text-sm text-[#1a3568] hover:underline">
+      <Link href="/cursos" className="text-sm font-medium text-brand-green hover:underline">
         ← Cursos
       </Link>
 
       <div className="mt-6 flex flex-col items-center text-center">
         <div
-          className="relative h-24 w-24 overflow-hidden rounded-full ring-4 ring-white"
+          className="relative h-24 w-24 overflow-hidden rounded-full ring-4 ring-brand-lime/40"
           style={{ boxShadow: `0 0 0 3px ${teacher.color}` }}
         >
           <Image
@@ -35,13 +35,13 @@ export default async function EstudiarHubPage({ params }: PageProps) {
             className="object-cover"
           />
         </div>
-        <h1 className="mt-4 text-3xl font-bold text-[#1a3568]">
+        <h1 className="heading-display mt-4 text-3xl text-brand-dark">
           Estudiar con {teacher.name}
         </h1>
-        <p className="mt-2 max-w-md text-slate-600">{teacher.bio}</p>
+        <p className="mt-2 max-w-md text-brand-muted">{teacher.bio}</p>
       </div>
 
-      <p className="mt-10 text-center text-sm font-medium uppercase tracking-wide text-slate-500">
+      <p className="eyebrow mt-10 text-center text-brand-muted">
         Elegí qué querés ver
       </p>
 
@@ -53,15 +53,15 @@ export default async function EstudiarHubPage({ params }: PageProps) {
               <Link
                 key={kind}
                 href={`/estudiar/${teacherSlug}/${meta.path}`}
-                className="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm transition hover:border-[#f5c518] hover:shadow-md"
+                className="flex flex-col rounded-2xl border border-black/5 bg-white p-6 text-center shadow-sm transition hover:border-brand-lime hover:shadow-md"
               >
                 <span className="text-3xl" aria-hidden>
                   {meta.emoji}
                 </span>
-                <span className="mt-3 text-lg font-bold text-[#1a3568]">
+                <span className="mt-3 text-lg font-bold text-brand-dark">
                   {meta.title}
                 </span>
-                <span className="mt-2 text-xs text-slate-600">{meta.description}</span>
+                <span className="mt-2 text-xs text-brand-muted">{meta.description}</span>
               </Link>
             );
           },

@@ -8,9 +8,9 @@ export default async function CursosPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
-      <h1 className="text-3xl font-bold text-[#1a3568]">Cursos y modalidades</h1>
-      <p className="mt-2 max-w-2xl text-slate-600">
-        Catálogo con datos de demostración. Estudiá con cada profe desde el botón amarillo.
+      <h1 className="heading-display text-3xl text-brand-dark">Cursos y modalidades</h1>
+      <p className="mt-2 max-w-2xl text-brand-muted">
+        Catálogo con datos de demostración. Estudiá con cada profe desde el botón verde.
       </p>
       <div className="mt-10 grid gap-4 sm:grid-cols-2">
         {courses.map((c) => (

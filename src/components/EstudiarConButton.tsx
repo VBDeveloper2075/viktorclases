@@ -14,7 +14,7 @@ export function EstudiarConButton({
   return (
     <Link
       href={`/estudiar/${teacherSlug}`}
-      className={`inline-flex w-full items-center justify-center rounded-xl bg-[#f5c518] px-5 py-3 text-sm font-bold text-[#1a3568] shadow-sm transition hover:bg-[#e0b010] ${className}`}
+      className={`btn-brand w-full px-5 py-3 text-sm shadow-sm ${className}`}
     >
       Estudiar con {teacherName}
     </Link>
