@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getFeaturedCourses, getTestimonials } from "@/lib/data/repository";
 import { CourseCard } from "@/components/CourseCard";
+import { Logo } from "@/components/Logo";
 
 export default async function HomePage() {
   const [courses, testimonials] = await Promise.all([
@@ -12,24 +13,24 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-brand-dark px-4 py-16 text-white md:py-24">
+      <section className="relative overflow-hidden bg-white px-4 py-12 md:py-20">
         <div
-          className="pointer-events-none absolute inset-0 opacity-20"
+          className="pointer-events-none absolute inset-0"
           aria-hidden
           style={{
             background:
-              "linear-gradient(135deg, #A2D729 0%, transparent 40%, #2E7D32 100%)",
+              "radial-gradient(ellipse at 85% 0%, rgba(162,215,41,0.22) 0%, transparent 55%), radial-gradient(ellipse at 0% 100%, rgba(46,125,50,0.12) 0%, transparent 50%)",
           }}
         />
-        <div className="relative mx-auto max-w-6xl">
-          <p className="eyebrow text-brand-lime">Matemática y Física</p>
-          <h1 className="heading-display mt-3 max-w-2xl text-4xl text-white md:text-5xl">
+        <div className="relative mx-auto flex max-w-6xl flex-col items-center text-center">
+          <Logo size="lg" />
+          <h1 className="heading-display mt-8 max-w-2xl text-3xl text-brand-dark md:text-4xl">
             Aprobá con la fuerza de estudiar bien
           </h1>
-          <p className="mt-4 max-w-xl text-lg text-white/80">
+          <p className="mt-4 max-w-xl text-lg text-brand-muted">
             Clases grupales y virtuales · UTN · CBC · UBA XXI
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link href="/cursos" className="btn-brand px-6 py-3.5 text-sm uppercase tracking-wide">
               Ver cursos disponibles
             </Link>

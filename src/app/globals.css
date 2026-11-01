@@ -39,6 +39,23 @@ body {
   color: transparent;
 }
 
+.bg-brand-gradient-x {
+  background: linear-gradient(90deg, #a2d729 0%, #2e7d32 100%);
+}
+
+.logo-word {
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.logo-integral {
+  font-weight: 700;
+  line-height: 0.8;
+  margin: 0 -0.04em;
+  transform: translateY(0.08em) skewX(-6deg);
+}
+
 .btn-brand {
   display: inline-flex;
   align-items: center;

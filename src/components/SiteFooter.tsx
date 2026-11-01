@@ -8,11 +8,8 @@ export function SiteFooter() {
     <footer className="mt-auto border-t border-brand-surface bg-brand-surface">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-3 md:px-6">
         <div>
-          <Logo />
-          <p className="eyebrow mt-4 text-brand-green">
-            Matemática y Física
-          </p>
-          <p className="mt-2 text-sm text-brand-muted">
+          <Logo size="md" />
+          <p className="mt-4 text-sm text-brand-muted">
             Clases de apoyo para ingreso. UTN · CBC · UBA XXI.
           </p>
         </div>
